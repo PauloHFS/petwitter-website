@@ -1,9 +1,10 @@
-import { Routes, Route } from "react-router-dom";
-import { AuthProvider, RequireAuth } from "./context/auth-context";
-import Login from "./routes/Login";
-import Layout from "./components/Layout";
-import PublicPage from "./routes/PublicPage";
-import ProtectedPage from "./routes/ProtectedPage";
+import { Route, Routes } from 'react-router-dom';
+import Layout from './components/Layout';
+import { AuthProvider, RequireAuth } from './context/auth-context';
+import { Login } from './routes/Login';
+import ProtectedPage from './routes/ProtectedPage';
+import PublicPage from './routes/PublicPage';
+import { Signup } from './routes/Signup';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<PublicPage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route
             path="/protected"
             element={

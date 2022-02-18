@@ -1,11 +1,11 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet } from 'react-router-dom';
 
-import AuthStatus from "./AuthStatus";
+import AuthStatus from './AuthStatus';
 
 function Layout() {
   return (
     <div>
-      <AuthStatus />
+      {/* <AuthStatus />
 
       <ul>
         <li>
@@ -14,7 +14,7 @@ function Layout() {
         <li>
           <Link to="/protected">Protected Page</Link>
         </li>
-      </ul>
+      </ul> */}
 
       <Outlet />
     </div>
