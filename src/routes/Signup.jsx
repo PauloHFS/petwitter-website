@@ -12,7 +12,6 @@ import {
   InputRightElement,
   Link,
   Text,
-  useToast,
   VStack,
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
@@ -25,7 +24,7 @@ import {
 import * as Yup from 'yup';
 import { useAuth } from '../context/auth-context';
 
-export const Login = () => {
+export const Signup = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { signin } = useAuth();
@@ -35,28 +34,13 @@ export const Login = () => {
 
   const from = location.state?.from?.pathname || '/';
 
-  const toast = useToast();
-
   async function handleSubmit(event) {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
     const email = formData.get('email');
     const password = formData.get('password');
-
-    const { error } = await signin({ email, password });
-    if (!error) {
-      navigate(from, { replace: true });
-    } else {
-      const { name, status: statusCode, message } = error.toJSON();
-      toast({
-        title: name,
-        description: message,
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-    }
+    // todo: adicionar os outros campos e mandar a requisição
   }
 
   return (
@@ -64,15 +48,14 @@ export const Login = () => {
       <Flex
         flexDir="column"
         justifyContent="space-between"
-        minH={['64']}
         bgImage={[
-          "url('/images/loginbgmobile.png')",
+          "url('/images/signupbgmobile.png')",
           "url('/images/loginbglarge')",
         ]}
         bgPosition="initial"
         bgRepeat="round"
         pt="12"
-        pb="6"
+        pb="12"
         pl="26"
       >
         <svg
@@ -103,15 +86,6 @@ export const Login = () => {
             fill="white"
           />
         </svg>
-        <Text
-          fontSize="36"
-          fontWeight="700"
-          fontStyle="normal"
-          lineHeight="49.03px"
-          color="white"
-        >
-          Comece agora. Conecte-se já.
-        </Text>
       </Flex>
 
       <Flex flexDir="column" px="8" pt="30" pb="6">
@@ -124,25 +98,51 @@ export const Login = () => {
           color="gray.900"
           mb="8"
         >
-          Login
+          Cadastro
         </Text>
 
         <Formik
           initialValues={{
+            name: '',
             email: '',
+            username: '',
             password: '',
           }}
           validationSchema={Yup.object().shape({
+            name: Yup.string().required('Nome é obrigatório'),
             email: Yup.string()
               .email('E-mail inválido')
               .required('E-mail é obrigatório'),
-            password: Yup.string().required('Senha é obrigatória'),
+            username: Yup.string().required('Nome de usuário é obrigatório'),
+            password: Yup.string()
+              .required('Senha é obrigatória')
+              .matches(
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/,
+                'Deve conter 8 caracteres, uma letra maiúscula, uma minúscula e um número'
+              ),
           })}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
             <Form onSubmit={handleSubmit}>
-              <VStack spacing="8" mb="10">
+              <VStack spacing="4" mb="10">
+                <Field name="name">
+                  {({ field, form }) => (
+                    <FormControl
+                      isInvalid={form.errors.name && form.touched.name}
+                    >
+                      <FormLabel htmlFor="name">Nome</FormLabel>
+                      <Input
+                        {...field}
+                        name="name"
+                        type="text"
+                        placeholder="Nome"
+                      />
+                      <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                    </FormControl>
+                  )}
+                </Field>
+
                 <Field name="email">
                   {({ field, form }) => (
                     <FormControl
@@ -160,23 +160,31 @@ export const Login = () => {
                   )}
                 </Field>
 
+                <Field name="username">
+                  {({ field, form }) => (
+                    <FormControl
+                      isInvalid={form.errors.username && form.touched.username}
+                    >
+                      <FormLabel htmlFor="username">Nome</FormLabel>
+                      <Input
+                        {...field}
+                        name="username"
+                        type="text"
+                        placeholder="Ex.: @billbulldog"
+                      />
+                      <FormErrorMessage>
+                        {form.errors.username}
+                      </FormErrorMessage>
+                    </FormControl>
+                  )}
+                </Field>
+
                 <Field name="password">
                   {({ field, form }) => (
                     <FormControl
                       isInvalid={form.errors.password && form.touched.password}
                     >
-                      <HStack justifyContent="space-between">
-                        <FormLabel htmlFor="password">Senha</FormLabel>
-                        <Link to="/login">
-                          <Text
-                            fontWeight="400"
-                            fontSize="12"
-                            lineHeight="16px"
-                          >
-                            Esqueci minha senha
-                          </Text>
-                        </Link>
-                      </HStack>
+                      <FormLabel htmlFor="password">Senha</FormLabel>
                       <InputGroup>
                         <Input
                           {...field}
@@ -206,17 +214,17 @@ export const Login = () => {
                 variant="solid"
                 isLoading={isSubmitting}
               >
-                Login
+                Entrar
               </Button>
             </Form>
           )}
         </Formik>
 
         <Text mt="6" fontWeight="400" fontSize="16" lineHeight="24px">
-          {'Ainda não possui uma conta?'}
+          Já possui cadastro?
           <br />
-          <Link as={RouterDomLink} to="/signup">
-            Cadastrar-se
+          <Link as={RouterDomLink} to="/login">
+            Faça login
           </Link>
         </Text>
         <HStack mx="auto" mt="57">

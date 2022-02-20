@@ -1,15 +1,14 @@
-import { createContext, useState, useContext } from "react";
-import { useLocation, Navigate } from "react-router-dom";
-
-import { setInStorage, login } from "../services/auth";
+import { createContext, useContext, useState } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { login, setInStorage } from '../services/auth';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const userStored = localStorage.getItem("user");
+  const userStored = localStorage.getItem('user');
   const [user, setUser] = useState(userStored ? JSON.parse(userStored) : null);
 
-  const signin = async (data) => {
+  const signin = async data => {
     try {
       const response = await login(data);
       const user = {
@@ -17,11 +16,10 @@ export function AuthProvider({ children }) {
         ...response.data.user,
       };
 
-      setInStorage("user", user);
+      setInStorage('user', user);
       setUser(user);
     } catch (error) {
-      console.log(error);
-      alert("Email ou senha inválidos");
+      return { error };
     }
   };
 
