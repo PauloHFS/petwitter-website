@@ -1,24 +1,31 @@
 import { Route, Routes } from 'react-router-dom';
-import Layout from './components/Layout';
+import { Layout } from './components/Layout';
 import { AuthProvider, RequireAuth } from './context/auth-context';
+import { Home } from './routes/Home';
 import { Login } from './routes/Login';
-import ProtectedPage from './routes/ProtectedPage';
-import PublicPage from './routes/PublicPage';
+import { Profile } from './routes/Profile';
 import { Signup } from './routes/Signup';
 
-function App() {
+const App = () => {
   return (
     <AuthProvider>
       <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route element={<Layout />}>
-          <Route path="/" element={<PublicPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
           <Route
-            path="/protected"
+            path="/"
             element={
               <RequireAuth>
-                <ProtectedPage />
+                <Home />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth>
+                <Profile />
               </RequireAuth>
             }
           />
@@ -26,6 +33,6 @@ function App() {
       </Routes>
     </AuthProvider>
   );
-}
+};
 
 export default App;
