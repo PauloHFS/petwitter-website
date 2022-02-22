@@ -45,6 +45,7 @@ export const Login = () => {
     const password = formData.get('password');
 
     const { error } = await signin({ email, password });
+
     if (!error) {
       navigate(from, { replace: true });
     } else {

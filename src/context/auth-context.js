@@ -7,6 +7,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const userStored = localStorage.getItem('user');
   const [user, setUser] = useState(userStored ? JSON.parse(userStored) : null);
+  const [error, setError] = useState(null);
 
   const signin = async data => {
     try {
@@ -19,8 +20,10 @@ export function AuthProvider({ children }) {
       setInStorage('user', user);
       setUser(user);
     } catch (error) {
-      return { error };
+      setError(error);
     }
+
+    return { user, error };
   };
 
   const signout = () => {
