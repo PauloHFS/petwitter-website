@@ -185,10 +185,16 @@ export const MobileLayout = ({ children }) => {
             borderBottomWidth="1px"
             borderBottomColor="gray.200"
           >
-            <Button variant="outline" onClick={onModalClose}>
+            <Text
+              fontStyle="auto"
+              fontWeight="300"
+              lineHeight="21px"
+              my="auto"
+              onClick={onModalClose}
+            >
               Cancelar
-            </Button>
-            <Button>Petwittar</Button>
+            </Text>
+            <Button px="2">Petwittar</Button>
           </Flex>
           <Flex mx="4" mt="6px">
             <Avatar name="Dan Abrahmov" src="https://bit.ly/dan-abramov" />
@@ -198,6 +204,9 @@ export const MobileLayout = ({ children }) => {
               resize="none"
               _focus={{ borderColor: 'white' }}
             />
+          </Flex>
+          <Flex>
+            <Text>0/140</Text>
           </Flex>
         </ModalContent>
       </Modal>

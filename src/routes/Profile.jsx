@@ -95,7 +95,17 @@ export const Profile = () => {
           name="Dan Abrahmov"
           src="https://bit.ly/dan-abramov"
         />
-        <Button mt="4" mr="4" variant="outline" color="cyan.400">
+        <Button
+          mt="4"
+          mr="4"
+          variant="outline"
+          color="cyan.400"
+          borderColor="cyan.400"
+          fontSize="12px"
+          lineHeight="24px"
+          fontWeight="400"
+          px="2"
+        >
           Edit profile
         </Button>
       </Flex>
