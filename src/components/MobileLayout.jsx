@@ -1,8 +1,6 @@
-import { AddIcon } from '@chakra-ui/icons';
 import {
   Avatar,
   Box,
-  Button,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -10,25 +8,16 @@ import {
   DrawerOverlay,
   Flex,
   HStack,
-  IconButton,
-  Modal,
-  ModalContent,
-  ModalOverlay,
   Text,
-  Textarea,
   useDisclosure,
 } from '@chakra-ui/react';
 import { Fragment, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AuthStatus from './AuthStatus';
+import { CreatePostModal } from './CreatePostModal';
 
 export const MobileLayout = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isModalOpen,
-    onOpen: onModalOpen,
-    onClose: onModalClose,
-  } = useDisclosure();
 
   const btnRef = useRef();
 
@@ -109,17 +98,8 @@ export const MobileLayout = ({ children }) => {
         </HStack>
       </Box>
 
-      <IconButton
-        display={['flex', 'none']}
-        aria-label="Create a post"
-        icon={<AddIcon />}
-        borderRadius="50"
-        position="fixed"
-        bottom="8"
-        right="4"
-        size="lg"
-        onClick={onModalOpen}
-      />
+      <CreatePostModal />
+
       <Drawer
         isOpen={isOpen}
         placement="left"
@@ -139,6 +119,7 @@ export const MobileLayout = ({ children }) => {
           <DrawerBody p="0">
             {routes.map(route => (
               <Flex
+                key={route.name}
                 borderLeft={route.url === location.pathnme ? 'solid' : 'none'}
                 borderLeftWidth={route.url === location.pathname ? '1' : 0}
                 borderLeftColor={
@@ -174,42 +155,6 @@ export const MobileLayout = ({ children }) => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-
-      <Modal isOpen={isModalOpen} onClose={onModalClose} size="full">
-        <ModalOverlay />
-        <ModalContent mt="33px">
-          <Flex
-            p="2"
-            justifyContent="space-between"
-            borderBottom="solid"
-            borderBottomWidth="1px"
-            borderBottomColor="gray.200"
-          >
-            <Text
-              fontStyle="auto"
-              fontWeight="300"
-              lineHeight="21px"
-              my="auto"
-              onClick={onModalClose}
-            >
-              Cancelar
-            </Text>
-            <Button px="2">Petwittar</Button>
-          </Flex>
-          <Flex mx="4" mt="6px">
-            <Avatar name="Dan Abrahmov" src="https://bit.ly/dan-abramov" />
-            <Textarea
-              placeholder="O que está acontecendo?"
-              borderColor="white"
-              resize="none"
-              _focus={{ borderColor: 'white' }}
-            />
-          </Flex>
-          <Flex>
-            <Text>0/140</Text>
-          </Flex>
-        </ModalContent>
-      </Modal>
 
       <Box pt={['48px', '0']}>{children}</Box>
     </Fragment>

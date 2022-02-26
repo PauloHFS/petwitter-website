@@ -1,12 +1,24 @@
-import { Flex, Box, Avatar, HStack, Text } from '@chakra-ui/react';
+import { Avatar, Box, Flex, HStack, Text } from '@chakra-ui/react';
+import TimeAgo from 'react-timeago';
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+import ptBrStrings from 'react-timeago/lib/language-strings/pt-br';
 
 export const Post = props => {
-  const { imageUrl, name, nickname, date, body } = props;
+  const { post_data } = props;
+
+  const {
+    id,
+    imageUrl,
+    user: { id: user_id, name, username },
+    createAt,
+    text,
+  } = post_data;
+
+  const formatter = buildFormatter(ptBrStrings);
 
   return (
     <Flex
       flexDir="row"
-      minH="149"
       pt="5"
       px="4"
       pb="4"
@@ -23,6 +35,7 @@ export const Post = props => {
             fontSize="14px"
             lineHeight="19px"
             color="gray.600"
+            wordBreak="break-word"
           >
             {name}
           </Text>
@@ -32,8 +45,9 @@ export const Post = props => {
             fontSize="12px"
             lineHeight="17px"
             color="gray.600"
+            wordBreak="break-word"
           >
-            {nickname}
+            {username}
           </Text>
           <Text
             fontStyle="normal"
@@ -41,6 +55,7 @@ export const Post = props => {
             fontSize="12px"
             lineHeight="17px"
             color="gray.600"
+            wordBreak="break-word"
           >
             {'•'}
           </Text>
@@ -50,8 +65,9 @@ export const Post = props => {
             fontSize="12px"
             lineHeight="17px"
             color="gray.600"
+            wordBreak="break-word"
           >
-            {'1m'}
+            <TimeAgo date={new Date(createAt)} formatter={formatter} />
           </Text>
         </HStack>
         <Text
@@ -60,8 +76,9 @@ export const Post = props => {
           fontSize="14px"
           lineHeight="18px"
           color="#141619"
+          wordBreak="break-word"
         >
-          {body}
+          {text}
         </Text>
       </Box>
     </Flex>
