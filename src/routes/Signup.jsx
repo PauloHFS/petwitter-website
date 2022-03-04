@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
 import { useState } from 'react';
-import { Link as RouterDomLink, useLocation } from 'react-router-dom';
+import { Link as RouterDomLink } from 'react-router-dom';
 import * as Yup from 'yup';
 
 export const Signup = () => {
