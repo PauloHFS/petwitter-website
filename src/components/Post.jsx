@@ -7,9 +7,8 @@ export const Post = props => {
   const { post_data } = props;
 
   const {
-    id,
     imageUrl,
-    user: { id: user_id, name, username },
+    user: { name, username },
     createAt,
     text,
   } = post_data;

@@ -16,30 +16,25 @@ import {
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
 import { useState } from 'react';
-import {
-  Link as RouterDomLink,
-  useLocation,
-  useNavigate,
-} from 'react-router-dom';
+import { Link as RouterDomLink, useLocation } from 'react-router-dom';
 import * as Yup from 'yup';
-import { useAuth } from '../context/auth-context';
 
 export const Signup = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { signin } = useAuth();
+  // const navigate = useNavigate();
+  // const location = useLocation();
+  // const { signin } = useAuth();
 
   const [showPassword, setshowPassword] = useState(false);
   const handleShowPasswordClick = () => setshowPassword(!showPassword);
 
-  const from = location.state?.from?.pathname || '/';
+  // const from = location.state?.from?.pathname || '/';
 
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get('email');
-    const password = formData.get('password');
+    // const formData = new FormData(event.currentTarget);
+    // const email = formData.get('email');
+    // const password = formData.get('password');
     // todo: adicionar os outros campos e mandar a requisição
   }
 

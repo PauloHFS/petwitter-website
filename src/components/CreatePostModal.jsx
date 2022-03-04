@@ -11,12 +11,11 @@ import {
   Textarea,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { createPost } from '../services/posts';
 
 export const CreatePostModal = () => {
-  const [newPost, setNewPost] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const queryClient = useQueryClient();

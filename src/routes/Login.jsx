@@ -50,7 +50,7 @@ export const Login = () => {
     if (!error) {
       navigate(from, { replace: true });
     } else {
-      const { name, status: statusCode, message } = error.toJSON();
+      const { name, message } = error.toJSON();
       toast({
         title: name,
         description: message,
