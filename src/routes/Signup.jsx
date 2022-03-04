@@ -12,31 +12,60 @@ import {
   InputRightElement,
   Link,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
-import { useState } from 'react';
-import { Link as RouterDomLink } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useMutation } from 'react-query';
+import {
+  Link as RouterDomLink,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom';
 import * as Yup from 'yup';
+import { signup } from '../services/auth.js';
 
 export const Signup = () => {
-  // const navigate = useNavigate();
-  // const location = useLocation();
-  // const { signin } = useAuth();
+  const toast = useToast();
+  const mutation = useMutation('signup', signup);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [showPassword, setshowPassword] = useState(false);
   const handleShowPasswordClick = () => setshowPassword(!showPassword);
 
-  // const from = location.state?.from?.pathname || '/';
+  const from = location.state?.from?.pathname || '/';
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-
-    // const formData = new FormData(event.currentTarget);
-    // const email = formData.get('email');
-    // const password = formData.get('password');
-    // todo: adicionar os outros campos e mandar a requisição
+  async function handleOnSubmit(values) {
+    mutation.mutate(values);
   }
+
+  useEffect(() => {
+    if (!!mutation.data && mutation.data.status === 200) {
+      toast({
+        title: 'Cadastro concluido com sucesso!',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+      navigate(from, { replace: true });
+    }
+  }, [from, mutation.data, navigate, toast]);
+
+  useEffect(() => {
+    if (!!mutation.error) {
+      toast({
+        title:
+          mutation.error.toJSON().status === 400
+            ? 'Já existe usuário com essas informações!'
+            : 'Não foi possivel efetuar o cadastro tente novamente!',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [mutation.error, toast]);
 
   return (
     <Flex flexDir="column">
@@ -116,9 +145,9 @@ export const Signup = () => {
                 'Deve conter 8 caracteres, uma letra maiúscula, uma minúscula e um número'
               ),
           })}
-          onSubmit={handleSubmit}
+          onSubmit={values => handleOnSubmit(values)}
         >
-          {({ isSubmitting }) => (
+          {({ handleSubmit, isSubmitting }) => (
             <Form onSubmit={handleSubmit}>
               <VStack spacing="4" mb="10">
                 <Field name="name">
@@ -160,12 +189,12 @@ export const Signup = () => {
                     <FormControl
                       isInvalid={form.errors.username && form.touched.username}
                     >
-                      <FormLabel htmlFor="username">Nome</FormLabel>
+                      <FormLabel htmlFor="username">Nome de Usuário</FormLabel>
                       <Input
                         {...field}
                         name="username"
                         type="text"
-                        placeholder="Ex.: @billbulldog"
+                        placeholder="Ex.: billbulldog"
                       />
                       <FormErrorMessage>
                         {form.errors.username}
