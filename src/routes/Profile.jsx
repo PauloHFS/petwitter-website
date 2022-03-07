@@ -6,95 +6,42 @@ import {
   Button,
   Text,
   HStack,
+  CircularProgress,
   Box,
 } from '@chakra-ui/react';
 import { Post } from '../components/Post';
+import { getUserInfo } from '../services/users';
+import { useQuery } from 'react-query';
+import { useLocation, useParams } from 'react-router-dom';
+import { getFromStorage } from '../services/auth';
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+import ptBrStrings from 'react-timeago/lib/language-strings/pt-br';
+import TimeAgo from 'react-timeago';
 
 export const Profile = () => {
-  const posts = [
-    {
-      imageUrl: 'https://bit.ly/dan-abramov',
-      name: 'Niko Vira-lata',
-      nickname: '@doguinhoniko_20',
-      date: new Date(),
-      body: "Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. ",
-    },
-    {
-      imageUrl: 'https://bit.ly/dan-abramov',
-      name: 'Niko Vira-lata',
-      nickname: '@doguinhoniko_20',
-      date: new Date(),
-      body: "Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. ",
-    },
-    {
-      imageUrl: 'https://bit.ly/dan-abramov',
-      name: 'Niko Vira-lata',
-      nickname: '@doguinhoniko_20',
-      date: new Date(),
-      body: "Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. ",
-    },
-    {
-      imageUrl: 'https://bit.ly/dan-abramov',
-      name: 'Niko Vira-lata',
-      nickname: '@doguinhoniko_20',
-      date: new Date(),
-      body: "Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. ",
-    },
-    {
-      imageUrl: 'https://bit.ly/dan-abramov',
-      name: 'Niko Vira-lata',
-      nickname: '@doguinhoniko_20',
-      date: new Date(),
-      body: "Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. ",
-    },
-    {
-      imageUrl: 'https://bit.ly/dan-abramov',
-      name: 'Niko Vira-lata',
-      nickname: '@doguinhoniko_20',
-      date: new Date(),
-      body: "Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. ",
-    },
-    {
-      imageUrl: 'https://bit.ly/dan-abramov',
-      name: 'Niko Vira-lata',
-      nickname: '@doguinhoniko_20',
-      date: new Date(),
-      body: "Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. ",
-    },
-    {
-      imageUrl: 'https://bit.ly/dan-abramov',
-      name: 'Niko Vira-lata',
-      nickname: '@doguinhoniko_20',
-      date: new Date(),
-      body: "Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. ",
-    },
-    {
-      imageUrl: 'https://bit.ly/dan-abramov',
-      name: 'Niko Vira-lata',
-      nickname: '@doguinhoniko_20',
-      date: new Date(),
-      body: "Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. ",
-    },
-    {
-      imageUrl: 'https://bit.ly/dan-abramov',
-      name: 'Niko Vira-lata',
-      nickname: '@doguinhoniko_20',
-      date: new Date(),
-      body: "Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. Name a show where the lead character is the worst character on the show I'll get Sabrina Spellman. ",
-    },
-  ];
+  const location = useLocation();
+  const { userId } = useParams();
+
+  const formatter = buildFormatter(ptBrStrings);
+
+  const fetchUser = () =>
+    getUserInfo({
+      userId:
+        location.pathname === '/profile' ? getFromStorage('user').id : userId,
+    });
+
+  const { data, isLoading, isError } = useQuery('userInfo', fetchUser);
+
+  if (isLoading)
+    return <CircularProgress isIndeterminate value={30} size="120px" />;
+
+  if (isError) return <h1>Error ao acessar usuário</h1>;
 
   return (
     <Fragment>
-      <Image maxH="100" src="/images/headerimage.png" />
+      <Image maxH={['100', '222']} width="100%" src="/images/headerimage.png" />
       <Flex alignItems="center" justifyContent="space-between">
-        <Avatar
-          mt="-4"
-          ml="4"
-          size="lg"
-          name="Dan Abrahmov"
-          src="https://bit.ly/dan-abramov"
-        />
+        <Avatar mt="-4" ml="4" size="lg" name={data.data.user.name} />
         <Button
           mt="4"
           mr="4"
@@ -117,10 +64,10 @@ export const Profile = () => {
           fontSize="22"
           lineHeight="30px"
         >
-          Bill Bulldog
+          {data.data.user.name}
         </Text>
         <Text fontSize="16" lineHeight="22px" color="#687684">
-          @billthebulldog2022
+          {`@${data.data.user.username}`}
         </Text>
         <Text my="12px">Front-end developer at @otterwise</Text>
         <HStack>
@@ -164,8 +111,8 @@ export const Profile = () => {
               fill="#687684"
             />
             <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
+              fillRule="evenodd"
+              clipRule="evenodd"
               d="M2 0C0.895508 0 0 0.895386 0 2V12.5C0 13.6046 0.895508 14.5 2 14.5H12.5C13.6045 14.5 14.5 13.6046 14.5 12.5V2C14.5 0.895386 13.6045 0 12.5 0H2ZM12.5 2.5H2C1.79883 2.5 1.61572 2.57947 1.48096 2.70874C1.33838 2.84521 1.25 3.03723 1.25 3.25V12.5C1.25 12.9142 1.58594 13.25 2 13.25H12.5C12.9141 13.25 13.25 12.9142 13.25 12.5V3.25C13.25 2.83582 12.9141 2.5 12.5 2.5Z"
               fill="#687684"
             />
@@ -175,7 +122,10 @@ export const Profile = () => {
             color="#687684;
 "
           >
-            Joined September 2018
+            <TimeAgo
+              date={new Date(data.data.user.createAt)}
+              formatter={formatter}
+            />
           </Text>
         </HStack>
       </Flex>
@@ -190,9 +140,6 @@ export const Profile = () => {
           <Text>Petposts</Text>
         </Box>
       </HStack>
-      {posts.map((post, index) => (
-        <Post {...post} key={index} />
-      ))}
     </Fragment>
   );
 };
