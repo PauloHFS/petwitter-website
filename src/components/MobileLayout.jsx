@@ -14,6 +14,7 @@ import {
 import { Fragment, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AuthStatus from './AuthStatus';
+import { getFromStorage } from '../services/auth';
 import { CreatePostModal } from './CreatePostModal';
 
 export const MobileLayout = ({ children }) => {
@@ -110,8 +111,7 @@ export const MobileLayout = ({ children }) => {
         <DrawerContent>
           <DrawerHeader pt="10" pb="8" mx="auto">
             <Avatar
-              name="Hello World"
-              src="https://bit.ly/dan-abramov"
+              name={getFromStorage('user').name ?? 'Hello World'}
               size="lg"
             />
           </DrawerHeader>
