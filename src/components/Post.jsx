@@ -3,16 +3,12 @@ import TimeAgo from 'react-timeago';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import ptBrStrings from 'react-timeago/lib/language-strings/pt-br';
 
-export const Post = props => {
-  const { post_data } = props;
-
-  const {
-    imageUrl,
-    user: { name, username },
-    createAt,
-    text,
-  } = post_data;
-
+export const Post = ({
+  imageUrl,
+  user: { name, username },
+  createAt,
+  text,
+}) => {
   const formatter = buildFormatter(ptBrStrings);
 
   return (
@@ -25,7 +21,7 @@ export const Post = props => {
       borderBottomColor="gray.200"
       borderBottomWidth="1px"
     >
-      <Avatar name={name} src={imageUrl} />
+      <Avatar name={name} /* src={imageUrl} */ />
       <Box ml="2">
         <HStack spacing="1">
           <Text
