@@ -36,30 +36,25 @@ export const Profile = () => {
     data: Posts,
     error,
     fetchNextPage,
-    // hasNextPage,
+    hasNextPage,
     isFetching: postsIsFetching,
   } = useInfiniteQuery(
     'userFeed',
-    ({ pageParams }) =>
+    ({ pageParam }) =>
       getUserPosts({
         user_id:
           location.pathname === '/profile' ? getFromStorage('user').id : userId,
-        page: pageParams,
+        page: pageParam,
       }),
     {
-      getNextPageParam: (lastPage, pages) => lastPage.pageParams + 1,
+      getNextPageParam: (lastPage, pages) => {
+        if (pages.length === lastPage.data.totalPages) {
+          return undefined;
+        }
+        return pages.length + 1;
+      },
     }
   );
-
-  /* useEffect(() => {
-    if (!!Posts) {
-      console.log(
-        Posts.pages
-          .map(posts => posts.data.posts.map(post_data => post_data))
-          .reduce((acc, arr) => [...acc, ...arr], [])
-      );
-    }
-  }, [Posts]); */
 
   if (isLoading)
     return <CircularProgress isIndeterminate value={30} size="120px" />;
@@ -175,8 +170,8 @@ export const Profile = () => {
       {error && <h1>Não foi possivel carregars os posts</h1>}
       {!!Posts && (
         <InfiniteScroll
-          dataLength={Posts.pages.length * 100}
-          hasMore={Posts.pages[0].data.totalPages * 10 > Posts.pages.length}
+          dataLength={Posts.pages.length * 10}
+          hasMore={hasNextPage}
           next={fetchNextPage}
         >
           {Posts.pages

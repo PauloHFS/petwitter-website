@@ -9,16 +9,21 @@ export const Feed = () => {
     data: Posts,
     error,
     fetchNextPage,
-    // hasNextPage,
+    hasNextPage,
     isFetching,
   } = useInfiniteQuery(
     'feed',
-    ({ pageParams }) =>
+    ({ pageParam }) =>
       getFeed({
-        pageParams,
+        pageParam,
       }),
     {
-      getNextPageParam: (lastPage, pages) => lastPage.pageParams + 1,
+      getNextPageParam: (lastPage, pages) => {
+        if (pages.length === lastPage.data.totalPages) {
+          return undefined;
+        }
+        return pages.length + 1;
+      },
     }
   );
 
@@ -34,8 +39,8 @@ export const Feed = () => {
     <>
       {!!Posts && (
         <InfiniteScroll
-          dataLength={Posts.pages.length * 100}
-          hasMore={Posts.pages[0].data.totalPages * 10 > Posts.pages.length}
+          dataLength={Posts.pages.length * 10}
+          hasMore={hasNextPage}
           next={fetchNextPage}
         >
           {Posts.pages

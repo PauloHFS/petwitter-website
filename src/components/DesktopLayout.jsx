@@ -8,9 +8,12 @@ export const DesktopLayout = ({ children }) => {
       <Flex
         flex={['1', '2']}
         flexDir="column"
-        borderX={['none', 'solid']}
-        borderColor="gray.100"
-        borderWidth="1"
+        borderLeft="solid"
+        borderLeftWidth="0.3rem"
+        borderLeftColor="gray.100"
+        borderRight="solid"
+        borderRightWidth="0.3rem"
+        borderRightColor="gray.100"
       >
         {children}
       </Flex>

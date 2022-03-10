@@ -42,7 +42,7 @@ export const Post = ({
             color="gray.600"
             wordBreak="break-word"
           >
-            {username}
+            {`@${username}`}
           </Text>
           <Text
             fontStyle="normal"
