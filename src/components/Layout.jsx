@@ -1,10 +1,13 @@
 import { Outlet } from 'react-router-dom';
 import { MobileLayout } from '../components/MobileLayout';
+import { DesktopLayout } from './DesktopLayout';
 
 export const Layout = () => {
   return (
-    <MobileLayout>
-      <Outlet />
-    </MobileLayout>
+    <DesktopLayout>
+      <MobileLayout>
+        <Outlet />
+      </MobileLayout>
+    </DesktopLayout>
   );
 };
