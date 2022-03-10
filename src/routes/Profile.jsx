@@ -1,22 +1,23 @@
-import { Fragment } from 'react';
 import {
   Avatar,
-  Image,
-  Flex,
-  Button,
-  Text,
-  HStack,
-  CircularProgress,
   Box,
+  Button,
+  CircularProgress,
+  Flex,
+  HStack,
+  Image,
+  Text,
 } from '@chakra-ui/react';
-import { Post } from '../components/Post';
-import { getUserInfo } from '../services/users';
-import { useQuery } from 'react-query';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { useInfiniteQuery, useQuery } from 'react-query';
 import { useLocation, useParams } from 'react-router-dom';
-import { getFromStorage } from '../services/auth';
+import TimeAgo from 'react-timeago';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import ptBrStrings from 'react-timeago/lib/language-strings/pt-br';
-import TimeAgo from 'react-timeago';
+import { Post } from '../components/Post';
+import { getFromStorage } from '../services/auth';
+import { getUserPosts } from '../services/posts';
+import { getUserInfo } from '../services/users';
 
 export const Profile = () => {
   const location = useLocation();
@@ -24,13 +25,41 @@ export const Profile = () => {
 
   const formatter = buildFormatter(ptBrStrings);
 
-  const fetchUser = () =>
+  const { data, isLoading, isError } = useQuery('userInfo', () =>
     getUserInfo({
       userId:
         location.pathname === '/profile' ? getFromStorage('user').id : userId,
-    });
+    })
+  );
 
-  const { data, isLoading, isError } = useQuery('userInfo', fetchUser);
+  const {
+    data: Posts,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching: postsIsFetching,
+  } = useInfiniteQuery(
+    'userFeed',
+    ({ pageParams }) =>
+      getUserPosts({
+        user_id:
+          location.pathname === '/profile' ? getFromStorage('user').id : userId,
+        page: pageParams,
+      }),
+    {
+      getNextPageParam: (lastPage, pages) => lastPage.pageParams + 1,
+    }
+  );
+
+  /* useEffect(() => {
+    if (!!Posts) {
+      console.log(
+        Posts.pages
+          .map(posts => posts.data.posts.map(post_data => post_data))
+          .reduce((acc, arr) => [...acc, ...arr], [])
+      );
+    }
+  }, [Posts]); */
 
   if (isLoading)
     return <CircularProgress isIndeterminate value={30} size="120px" />;
@@ -38,7 +67,7 @@ export const Profile = () => {
   if (isError) return <h1>Error ao acessar usuário</h1>;
 
   return (
-    <Fragment>
+    <Flex maxW={['360', '680']} flexDir="column">
       <Image maxH={['100', '222']} width="100%" src="/images/headerimage.png" />
       <Flex alignItems="center" justifyContent="space-between">
         <Avatar mt="-4" ml="4" size="lg" name={data.data.user.name} />
@@ -140,6 +169,29 @@ export const Profile = () => {
           <Text>Petposts</Text>
         </Box>
       </HStack>
-    </Fragment>
+      {postsIsFetching && (
+        <CircularProgress isIndeterminate value={30} size="120px" />
+      )}
+      {error && <h1>Não foi possivel carregars os posts</h1>}
+      {!!Posts && (
+        <InfiniteScroll
+          dataLength={Posts.pages.length * 100}
+          hasMore={Posts.pages[0].data.totalPages * 10 > Posts.pages.length}
+          next={fetchNextPage}
+        >
+          {Posts.pages
+            .map(posts => posts.data.posts.map(post_data => post_data))
+            .reduce((acc, arr) => [...acc, ...arr], [])
+            .map(post_data => (
+              <Post
+                key={post_data.id}
+                user={post_data.user}
+                text={post_data.text}
+                createAt={post_data.createAt}
+              />
+            ))}
+        </InfiniteScroll>
+      )}
+    </Flex>
   );
 };
