@@ -9,7 +9,7 @@ export const Feed = () => {
     data: Posts,
     error,
     fetchNextPage,
-    hasNextPage,
+    // hasNextPage,
     isFetching,
   } = useInfiniteQuery(
     'feed',

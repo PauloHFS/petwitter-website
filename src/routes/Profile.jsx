@@ -36,7 +36,7 @@ export const Profile = () => {
     data: Posts,
     error,
     fetchNextPage,
-    hasNextPage,
+    // hasNextPage,
     isFetching: postsIsFetching,
   } = useInfiniteQuery(
     'userFeed',
