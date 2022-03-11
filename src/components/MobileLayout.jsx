@@ -33,7 +33,7 @@ export const MobileLayout = ({ children }) => {
     },
     {
       name: 'Meu Perfil',
-      url: `/profile/${getFromStorage('user').id}`,
+      url: `/profile/${getFromStorage('user')?.id ?? ''}`,
     },
     {
       name: 'Configurações',
@@ -111,7 +111,7 @@ export const MobileLayout = ({ children }) => {
         <DrawerContent>
           <DrawerHeader pt="10" pb="8" mx="auto">
             <Avatar
-              name={getFromStorage('user').name ?? 'Hello World'}
+              name={getFromStorage('user')?.name ?? 'Hello World'}
               size="lg"
             />
           </DrawerHeader>

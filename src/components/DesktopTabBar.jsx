@@ -42,7 +42,7 @@ export const DesktopTabBar = () => {
           />
         </svg>
       ),
-      url: `/profile/${getFromStorage('user').id}`,
+      url: `/profile/${getFromStorage('user')?.id ?? ''}`,
     },
     {
       name: 'Configurações',
