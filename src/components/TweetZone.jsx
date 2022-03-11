@@ -11,6 +11,7 @@ import { Formik } from 'formik';
 import { useMutation, useQueryClient } from 'react-query';
 import { getFromStorage } from '../services/auth';
 import { createPost } from '../services/posts';
+import * as Yup from 'yup';
 
 export const TweetZone = () => {
   const toast = useToast();
@@ -35,13 +36,26 @@ export const TweetZone = () => {
   return (
     <Formik
       initialValues={{ text: '' }}
+      validationSchema={Yup.object().shape({
+        text: Yup.string()
+          .min(1, 'Muito pequena!')
+          .max(140, 'Eita você chegou no limite!')
+          .required(),
+      })}
       onSubmit={(values, { setSubmitting }) => {
         mutation.mutate(values.text);
         values.text = '';
         setSubmitting(false);
       }}
     >
-      {({ values, handleChange, isSubmitting, handleSubmit }) => (
+      {({
+        values,
+        handleChange,
+        isSubmitting,
+        handleSubmit,
+        errors,
+        touched,
+      }) => (
         <form onSubmit={handleSubmit}>
           <Flex
             display={['none', 'flex']}
@@ -55,6 +69,7 @@ export const TweetZone = () => {
             <HStack>
               <Avatar name={getFromStorage('user').name} />
               <Textarea
+                rows="4"
                 name="text"
                 value={values.text}
                 onChange={handleChange}
@@ -68,7 +83,11 @@ export const TweetZone = () => {
               <Button px="2" type="submit" disabled={isSubmitting}>
                 Petwittar
               </Button>
-              <Text mx="4" my="auto" color="gray.300">
+              <Text
+                mx="4"
+                my="auto"
+                color={errors.text && touched.text ? 'red.200' : 'gray.300'}
+              >
                 {values.text.length}/140
               </Text>
             </Flex>
