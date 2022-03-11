@@ -17,6 +17,7 @@ import ptBrStrings from 'react-timeago/lib/language-strings/pt-br';
 import { Post } from '../components/Post';
 import { getUserPosts } from '../services/posts';
 import { getUserInfo } from '../services/users';
+import { getFromStorage } from '../services/auth';
 
 export const Profile = () => {
   const { userId } = useParams();
@@ -25,7 +26,7 @@ export const Profile = () => {
 
   const { data, isLoading, isError } = useQuery(['userInfo', userId], () =>
     getUserInfo({
-      userId: userId,
+      userId: !userId ? getFromStorage('user')?.id : userId,
     })
   );
 
@@ -39,7 +40,7 @@ export const Profile = () => {
     ['userFeed', userId],
     ({ pageParam }) =>
       getUserPosts({
-        user_id: userId,
+        user_id: !userId ? getFromStorage('user')?.id : userId,
         page: pageParam,
       }),
     {
