@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, AlertTitle, Spinner } from '@chakra-ui/react';
+import { Alert, AlertIcon, AlertTitle, Flex, Spinner } from '@chakra-ui/react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useInfiniteQuery } from 'react-query';
 import { Post } from '../components/Post';
@@ -57,13 +57,20 @@ export const Feed = () => {
         </InfiniteScroll>
       )}
       {isFetching && (
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="cyan.400"
-          size="xl"
-        />
+        <Flex
+          width="100%"
+          height="6rem"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="cyan.400"
+            size="xl"
+          />
+        </Flex>
       )}
     </>
   );

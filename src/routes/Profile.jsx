@@ -2,10 +2,10 @@ import {
   Avatar,
   Box,
   Button,
-  CircularProgress,
   Flex,
   HStack,
   Image,
+  Spinner,
   Text,
 } from '@chakra-ui/react';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -53,7 +53,22 @@ export const Profile = () => {
   );
 
   if (isLoading)
-    return <CircularProgress isIndeterminate value={30} size="120px" />;
+    return (
+      <Flex
+        width="100%"
+        height="100vh"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="cyan.400"
+          size="xl"
+        />
+      </Flex>
+    );
 
   if (isError) return <h1>Error ao acessar usuário</h1>;
 
@@ -160,9 +175,6 @@ export const Profile = () => {
           <Text>Petposts</Text>
         </Box>
       </HStack>
-      {postsIsFetching && (
-        <CircularProgress isIndeterminate value={30} size="120px" />
-      )}
       {error && <h1>Não foi possivel carregars os posts</h1>}
       {!!Posts && (
         <InfiniteScroll
@@ -182,6 +194,22 @@ export const Profile = () => {
               />
             ))}
         </InfiniteScroll>
+      )}
+      {postsIsFetching && (
+        <Flex
+          width="100%"
+          height="6rem"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="cyan.400"
+            size="xl"
+          />
+        </Flex>
       )}
     </Flex>
   );
