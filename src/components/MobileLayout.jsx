@@ -33,7 +33,7 @@ export const MobileLayout = ({ children }) => {
     },
     {
       name: 'Meu Perfil',
-      url: '/profile',
+      url: `/profile/${getFromStorage('user').id}`,
     },
     {
       name: 'Configurações',

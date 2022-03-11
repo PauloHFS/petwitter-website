@@ -1,5 +1,6 @@
 import { Flex, Text, HStack } from '@chakra-ui/react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { getFromStorage } from '../services/auth';
 
 export const DesktopTabBar = () => {
   const location = useLocation();
@@ -41,7 +42,7 @@ export const DesktopTabBar = () => {
           />
         </svg>
       ),
-      url: '/profile',
+      url: `/profile/${getFromStorage('user').id}`,
     },
     {
       name: 'Configurações',

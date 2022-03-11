@@ -10,25 +10,22 @@ import {
 } from '@chakra-ui/react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useInfiniteQuery, useQuery } from 'react-query';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import TimeAgo from 'react-timeago';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import ptBrStrings from 'react-timeago/lib/language-strings/pt-br';
 import { Post } from '../components/Post';
-import { getFromStorage } from '../services/auth';
 import { getUserPosts } from '../services/posts';
 import { getUserInfo } from '../services/users';
 
 export const Profile = () => {
-  const location = useLocation();
   const { userId } = useParams();
 
   const formatter = buildFormatter(ptBrStrings);
 
-  const { data, isLoading, isError } = useQuery('userInfo', () =>
+  const { data, isLoading, isError } = useQuery(['userInfo', userId], () =>
     getUserInfo({
-      userId:
-        location.pathname === '/profile' ? getFromStorage('user').id : userId,
+      userId: userId,
     })
   );
 
@@ -39,11 +36,10 @@ export const Profile = () => {
     hasNextPage,
     isFetching: postsIsFetching,
   } = useInfiniteQuery(
-    'userFeed',
+    ['userFeed', userId],
     ({ pageParam }) =>
       getUserPosts({
-        user_id:
-          location.pathname === '/profile' ? getFromStorage('user').id : userId,
+        user_id: userId,
         page: pageParam,
       }),
     {

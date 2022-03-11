@@ -1,11 +1,12 @@
 import { Avatar, Box, Flex, HStack, Text } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 import TimeAgo from 'react-timeago';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import ptBrStrings from 'react-timeago/lib/language-strings/pt-br';
 
 export const Post = ({
   imageUrl,
-  user: { name, username },
+  user: { id, name, username },
   createAt,
   text,
 }) => {
@@ -24,16 +25,18 @@ export const Post = ({
       <Avatar name={name} /* src={imageUrl} */ />
       <Box ml="2">
         <HStack spacing="1">
-          <Text
-            fontStyle="normal"
-            fontWeight="bold"
-            fontSize="14px"
-            lineHeight="19px"
-            color="gray.600"
-            wordBreak="break-word"
-          >
-            {name}
-          </Text>
+          <Link to={`/profile/${id}`}>
+            <Text
+              fontStyle="normal"
+              fontWeight="bold"
+              fontSize="14px"
+              lineHeight="19px"
+              color="gray.600"
+              wordBreak="break-word"
+            >
+              {name}
+            </Text>
+          </Link>
           <Text
             fontStyle="normal"
             fontWeight="300"
