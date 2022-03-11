@@ -13,8 +13,9 @@ import {
 } from '@chakra-ui/react';
 import { Fragment, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import AuthStatus from './AuthStatus';
+import { APP_ROUTES } from '../routes';
 import { getFromStorage } from '../services/auth';
+import AuthStatus from './AuthStatus';
 import { CreatePostModal } from './CreatePostModal';
 
 export const MobileLayout = ({ children }) => {
@@ -25,21 +26,6 @@ export const MobileLayout = ({ children }) => {
   const location = useLocation();
 
   let navigate = useNavigate();
-
-  const routes = [
-    {
-      name: 'Home',
-      url: '/',
-    },
-    {
-      name: 'Meu Perfil',
-      url: `/profile/${getFromStorage('user')?.id ?? ''}`,
-    },
-    {
-      name: 'Configurações',
-      url: '/settings',
-    },
-  ];
 
   return (
     <Fragment>
@@ -117,7 +103,7 @@ export const MobileLayout = ({ children }) => {
           </DrawerHeader>
 
           <DrawerBody p="0">
-            {routes.map(route => (
+            {APP_ROUTES.map(route => (
               <Flex
                 key={route.name}
                 borderLeft={route.url === location.pathnme ? 'solid' : 'none'}
