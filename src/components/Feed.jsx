@@ -1,10 +1,21 @@
-import { Alert, AlertIcon, AlertTitle, Flex, Spinner } from '@chakra-ui/react';
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  Flex,
+  Spinner,
+  useToast,
+} from '@chakra-ui/react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useInfiniteQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 import { Post } from '../components/Post';
 import { getFeed } from '../services/posts';
 
 export const Feed = () => {
+  const navigate = useNavigate();
+  const toast = useToast();
+
   const {
     data: Posts,
     error,
@@ -23,6 +34,19 @@ export const Feed = () => {
           return undefined;
         }
         return pages.length + 1;
+      },
+      onError: error => {
+        const { name, message, status } = error.toJSON();
+        if (status === 401) {
+          navigate('/login');
+        }
+        toast({
+          title: name,
+          description: message,
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
       },
     }
   );

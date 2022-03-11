@@ -7,27 +7,47 @@ import {
   Image,
   Spinner,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useInfiniteQuery, useQuery } from 'react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import TimeAgo from 'react-timeago';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import ptBrStrings from 'react-timeago/lib/language-strings/pt-br';
 import { Post } from '../components/Post';
+import { getFromStorage } from '../services/auth';
 import { getUserPosts } from '../services/posts';
 import { getUserInfo } from '../services/users';
-import { getFromStorage } from '../services/auth';
 
 export const Profile = () => {
+  const navigate = useNavigate();
+  const toast = useToast();
   const { userId } = useParams();
 
   const formatter = buildFormatter(ptBrStrings);
 
-  const { data, isLoading, isError } = useQuery(['userInfo', userId], () =>
-    getUserInfo({
-      userId: !userId ? getFromStorage('user')?.id : userId,
-    })
+  const { data, isLoading, isError } = useQuery(
+    ['userInfo', userId],
+    () =>
+      getUserInfo({
+        userId: !userId ? getFromStorage('user')?.id : userId,
+      }),
+    {
+      onError: error => {
+        const { name, message, status } = error.toJSON();
+        if (status === 401) {
+          navigate('/login');
+        }
+        toast({
+          title: name,
+          description: message,
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      },
+    }
   );
 
   const {
@@ -49,6 +69,19 @@ export const Profile = () => {
           return undefined;
         }
         return pages.length + 1;
+      },
+      onError: error => {
+        const { name, message, status } = error.toJSON();
+        if (status === 401) {
+          navigate('/login');
+        }
+        toast({
+          title: name,
+          description: message,
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
       },
     }
   );

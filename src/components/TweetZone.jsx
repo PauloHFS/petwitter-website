@@ -9,11 +9,13 @@ import {
 } from '@chakra-ui/react';
 import { Formik } from 'formik';
 import { useMutation, useQueryClient } from 'react-query';
+import { useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
 import { getFromStorage } from '../services/auth';
 import { createPost } from '../services/posts';
-import * as Yup from 'yup';
 
 export const TweetZone = () => {
+  const navigate = useNavigate();
   const toast = useToast();
   const queryClient = useQueryClient();
 
@@ -22,7 +24,10 @@ export const TweetZone = () => {
       queryClient.invalidateQueries('feed');
     },
     onError: error => {
-      const { name, message } = error.toJSON();
+      const { name, message, status } = error.toJSON();
+      if (status === 401) {
+        navigate('/login');
+      }
       toast({
         title: name,
         description: message,

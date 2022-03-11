@@ -18,10 +18,12 @@ import { createPost } from '../services/posts';
 import { getFromStorage } from '../services/auth';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 
 export const CreatePostModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+  const navigate = useNavigate();
 
   const userInfo = getFromStorage('user');
 
@@ -33,7 +35,10 @@ export const CreatePostModal = () => {
       onClose();
     },
     onError: error => {
-      const { name, message } = error.toJSON();
+      const { name, message, status } = error.toJSON();
+      if (status === 401) {
+        navigate('/login');
+      }
       toast({
         title: name,
         description: message,
