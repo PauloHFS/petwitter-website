@@ -58,7 +58,7 @@ export const Profile = () => {
   if (isError) return <h1>Error ao acessar usuário</h1>;
 
   return (
-    <Flex maxW={['360', '680']} flexDir="column">
+    <Flex /* maxW={['360', '680']} */ flexDir="column">
       <Image maxH={['100', '222']} width="100%" src="/images/headerimage.png" />
       <Flex alignItems="center" justifyContent="space-between">
         <Avatar mt="-4" ml="4" size="lg" name={data.data.user.name} />
