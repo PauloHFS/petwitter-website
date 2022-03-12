@@ -68,7 +68,8 @@ export const Login = () => {
         alignItems="center"
         minW="50vw"
         minH="100vh"
-        backgroundImage="url('/images/loginbglarge.png')"
+        bgImage="url('/images/loginbglarge.png')"
+        bgSize="cover"
       >
         <svg
           width="419"

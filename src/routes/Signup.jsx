@@ -76,6 +76,7 @@ export const Signup = () => {
         minW="45vw"
         minH="100vh"
         backgroundImage="url('/images/loginbglarge.png')"
+        bgSize="cover"
       >
         <svg
           width="419"
